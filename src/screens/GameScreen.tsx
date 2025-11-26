@@ -3,12 +3,14 @@ import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useScoring } from '../scoresystem/hooks/useScoring';
 import { CurrentScore } from '../components/CurrentScore';
+import { Val_10 } from '../constants/baseValue'
+
 
 const GameController: React.FC = () => {
   const { currentScore, highScore, updateScore, resetScore } = useScoring(0);
 
   const handleIncrement = () => {
-    updateScore([{ type: 'add', value: 10 }]);
+    updateScore([{ type: 'add', value: Val_10 }]);
   };
 
   const handleReset = () => {
@@ -29,7 +31,7 @@ const GameController: React.FC = () => {
               onPress={handleIncrement}
               activeOpacity={0.7}
             >
-              <Text style={styles.buttonText}>+10 Points</Text>
+              <Text style={styles.buttonText}>+{Val_10} Points</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

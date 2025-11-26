@@ -1,0 +1,1 @@
+export const Val_10 = 10;
