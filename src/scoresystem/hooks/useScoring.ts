@@ -1,59 +1,43 @@
 import { useState, useCallback, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { calculateScore } from '../utils/calculateScore';
+import { gameStorage } from "../storage/gameStorage"; 
+import { Rule, Bonus } from "../types/score"
+import { Numeric } from "../types/baseValue";
 
-type Rule =
-  | { type: 'add'; value: number }
-  | { type: 'multiply'; value: number }
-  | { type: 'timeBonus'; maxPoints: number; timeElapsed: number; penalty: number };
-
-type Bonus = {
-  value: number;
-  condition?: (score: number) => boolean;
-};
-
-const STORAGE_KEYS = {
-  HIGH_SCORE: '@scoring_high_score',
-};
-
-export const useScoring = (initialScore: number = 0) => {
-  const [currentScore, setCurrentScore] = useState<number>(initialScore);
-  const [highScore, setHighScore] = useState<number>(initialScore);
+export const useScoring = (initialScore: Numeric = 0) => {
+  const [currentScore, setCurrentScore] = useState<Numeric>(initialScore);
+  const [highScore, setHighScore] = useState<Numeric>(initialScore);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     loadHighScore();
   }, []);
 
+  /**
+   * Load high score using the storage service
+   */
   const loadHighScore = async () => {
     try {
-      const storedHighScore = await AsyncStorage.getItem(STORAGE_KEYS.HIGH_SCORE);
-      if (storedHighScore !== null) {
-        setHighScore(parseInt(storedHighScore, 10));
-      }
+      const stored = await gameStorage.getHighScore();
+      setHighScore(stored);
     } catch (error) {
-      console.error('Failed to load high score:', error);
+      console.error("loadHighScore error:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const saveHighScore = async (score: number) => {
-    try {
-      await AsyncStorage.setItem(STORAGE_KEYS.HIGH_SCORE, score.toString());
-    } catch (error) {
-      console.error('Failed to save high score:', error);
-    }
-  };
-
+  /**
+   * Update score & save new high score if needed
+   */
   const updateScore = useCallback(
-    (rules: Rule[], bonuses: Bonus[] = []): number => {
+    (rules: Rule[], bonuses: Bonus[] = []): Numeric => {
       const newScore = calculateScore(currentScore, rules, bonuses);
       setCurrentScore(newScore);
 
       if (newScore > highScore) {
         setHighScore(newScore);
-        saveHighScore(newScore);
+        gameStorage.setHighScore(newScore);
       }
 
       return newScore;
@@ -61,6 +45,9 @@ export const useScoring = (initialScore: number = 0) => {
     [currentScore, highScore]
   );
 
+  /**
+   * Reset score
+   */
   const resetScore = useCallback(() => {
     setCurrentScore(initialScore);
   }, [initialScore]);

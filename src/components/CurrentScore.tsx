@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Score, HighScore } from '../types/scoreUi'
 
 interface CurrentScoreProps {
-  score: number;
-  highScore: number;
+  score: Score;
+  highScore: HighScore;
 }
 
 export const CurrentScore: React.FC<CurrentScoreProps> = ({ score, highScore }) => {
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   },
   score: {
     fontSize: 64,
-    color: '#d4e3eeff',
+    color: '#ffffffff',
     fontWeight: 'bold',
   },
   divider: {
