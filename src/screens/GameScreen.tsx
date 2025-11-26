@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { useScoring } from '../scoresystem/hooks/useScoring';
+import { useScoring } from '../../scoresystem/hooks/useScoring';
 import { CurrentScore } from '../components/CurrentScore';
 import { Val_10 } from '../constants/baseValue'
 
