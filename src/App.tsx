@@ -1,2 +1,2 @@
-import GameController from "./core/GameController";
+import GameController from "./screens/GameScreen";
 export default GameController;
